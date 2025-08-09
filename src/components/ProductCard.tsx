@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Star, ShoppingCart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
 
 interface ProductCardProps {
   id: string;
@@ -18,6 +19,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({
+  id,
   title,
   description,
   price,
@@ -29,9 +31,19 @@ export const ProductCard = ({
   isPremium = false,
   isNew = false,
 }: ProductCardProps) => {
+  const { addToCart } = useCart();
   const discountPercentage = originalPrice 
     ? Math.round(((originalPrice - price) / originalPrice) * 100)
     : 0;
+
+  const handleAddToCart = () => {
+    addToCart({
+      id,
+      title,
+      price,
+      image,
+    });
+  };
 
   return (
     <Card className="group relative overflow-hidden bg-gradient-card border-border hover:border-primary/50 transition-all duration-300 hover:shadow-card hover:-translate-y-2">
@@ -117,6 +129,7 @@ export const ProductCard = ({
         <Button 
           variant="cart" 
           className="w-full group-hover:bg-primary group-hover:text-primary-foreground"
+          onClick={handleAddToCart}
         >
           <ShoppingCart className="w-4 h-4 mr-2" />
           Add to Cart

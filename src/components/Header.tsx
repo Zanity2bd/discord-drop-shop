@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { ShoppingCart, Search, User, Menu } from "lucide-react";
+import { ShoppingCart, Search, User, Menu, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
+import { useCart } from "@/contexts/CartContext";
+import { AuthDialog } from "@/components/AuthDialog";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const cartItemCount = 0; // Will be connected to cart state later
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const { totalItems } = useCart();
 
   return (
     <header className="sticky top-0 z-50 bg-card/80 backdrop-blur-xl border-b border-border">
@@ -55,24 +60,36 @@ export const Header = () => {
             onClick={() => console.log('Cart clicked')}
           >
             <ShoppingCart className="w-5 h-5" />
-            {cartItemCount > 0 && (
+            {totalItems > 0 && (
               <Badge
                 variant="destructive"
                 className="absolute -top-2 -right-2 w-5 h-5 p-0 flex items-center justify-center text-xs"
               >
-                {cartItemCount}
+                {totalItems}
               </Badge>
             )}
           </Button>
 
           {/* User Account */}
-          <Button 
-            variant="ghost" 
-            size="icon"
-            onClick={() => console.log('User account clicked')}
-          >
-            <User className="w-5 h-5" />
-          </Button>
+          {user ? (
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => signOut()}
+              title="Sign Out"
+            >
+              <LogOut className="w-5 h-5" />
+            </Button>
+          ) : (
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setAuthDialogOpen(true)}
+              title="Sign In"
+            >
+              <User className="w-5 h-5" />
+            </Button>
+          )}
 
           {/* Mobile Menu Button */}
           <Button
@@ -114,6 +131,11 @@ export const Header = () => {
           </div>
         </div>
       )}
+
+      <AuthDialog 
+        open={authDialogOpen} 
+        onOpenChange={setAuthDialogOpen} 
+      />
     </header>
   );
 };
