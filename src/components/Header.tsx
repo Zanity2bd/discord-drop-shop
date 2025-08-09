@@ -48,7 +48,12 @@ export const Header = () => {
         {/* Actions */}
         <div className="flex items-center space-x-3">
           {/* Cart Button */}
-          <Button variant="ghost" size="icon" className="relative">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative"
+            onClick={() => console.log('Cart clicked')}
+          >
             <ShoppingCart className="w-5 h-5" />
             {cartItemCount > 0 && (
               <Badge
@@ -61,7 +66,11 @@ export const Header = () => {
           </Button>
 
           {/* User Account */}
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => console.log('User account clicked')}
+          >
             <User className="w-5 h-5" />
           </Button>
 
